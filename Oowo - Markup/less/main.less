@@ -1,0 +1,60 @@
+@font-family--opensans: 'Open Sans', 'Helvetica Neue', 'Arial', 'Helvetica', sans-serif;
+
+@color--violet: #6666FF;
+@color--green: #44CB6F;
+
+body {
+	align-items: center;
+	cursor: default;
+	display: flex;
+	flex-direction: column;
+	font-family: 'Roboto', 'Open Sans', 'Helvetica Neue', 'Arial', 'Helvetica', sans-serif;
+	font-size: (18/14)*100%;
+	margin: 0;
+}
+div {
+	cursor: inherit;
+}
+
+.board {
+	
+}
+.moves {
+	
+}
+.move,
+.guess {
+	display: flex;
+}
+.check,
+.number {
+	align-items: center;
+	border: solid 1px transparent;
+	border-radius: 50%;
+	display: flex;
+	height: 2em;
+	justify-content: center;
+	margin: 0.4em;
+	width: 2em;
+}
+.check {
+	border-color: darken(white, 20%);
+}
+.check--active {
+	background-color: @color--green;
+	border-color: transparent;
+	transform: scale(1.1);
+	transition: transform 0.2s;
+}
+.number {
+	background-color: darken(white, 5%);
+	color: @color--violet;
+	font-family: @font-family--opensans;
+	font-weight: 800;
+	line-height: 1;
+}
+.number--active {
+	border: solid 1px @color--violet;
+	transform: scale(1.1);
+	transition: transform 0.2s;
+}
