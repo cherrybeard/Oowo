@@ -1,13 +1,15 @@
 (function() {
+  var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
   $(function() {
-    var DEBUG_MODE, addNumber, d, initGame, pickRandom, secret, selectActive;
+    var DEBUG_MODE, addNumber, checkGuess, d, initGame, pickRandom, secret, selectActive;
     DEBUG_MODE = true;
     d = function(string) {
       if (DEBUG_MODE) {
         return console.log(string);
       }
     };
-    secret = 0;
+    secret = [];
     pickRandom = function(array) {
       var index, number;
       index = Math.floor(Math.random() * array.length);
@@ -47,16 +49,49 @@
         return $('.check').removeClass('check--active');
       }
     };
+    checkGuess = function() {
+      var exist, guess, guesses, i, lastMove, match, number, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2;
+      guess = [];
+      guesses = $('.guess .number');
+      for (_i = 0, _len = guesses.length; _i < _len; _i++) {
+        number = guesses[_i];
+        guess.push(parseInt($(number).text()));
+        $(number).text('');
+      }
+      lastMove = $('.move').eq(-1);
+      _ref = lastMove.find('.number');
+      for (i = _j = 0, _len1 = _ref.length; _j < _len1; i = ++_j) {
+        number = _ref[i];
+        $(number).text(guess[i]);
+      }
+      exist = 0;
+      match = 0;
+      _ref1 = [0, 1, 2, 3];
+      for (_k = 0, _len2 = _ref1.length; _k < _len2; _k++) {
+        i = _ref1[_k];
+        if (_ref2 = guess[i], __indexOf.call(secret, _ref2) >= 0) {
+          exist++;
+        }
+        if (guess[i] === secret[i]) {
+          match++;
+        }
+      }
+      lastMove.find('.exist').text(exist);
+      lastMove.find('.match').text(match);
+      return selectActive(0);
+    };
     initGame = function() {
       var i, numbers, _i, _len, _ref;
+      secret = [];
       numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-      secret = pickRandom(numbers);
+      secret.push(pickRandom(numbers));
       numbers.push(0);
       _ref = [1, 2, 3];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         i = _ref[_i];
-        secret = secret * 10 + pickRandom(numbers);
+        secret.push(pickRandom(numbers));
       }
+      d(secret);
       return selectActive(0);
     };
     $(document).on("keypress", function(event) {
@@ -67,6 +102,9 @@
     });
     $('.guess .number').on("click", function() {
       return selectActive($(this));
+    });
+    $('.check').on("click", function() {
+      return checkGuess();
     });
     return initGame();
   });

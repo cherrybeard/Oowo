@@ -4,7 +4,7 @@ $ ->
 	d = (string) ->
 		console.log(string) if DEBUG_MODE
 	
-	secret = 0
+	secret = []
 	
 	pickRandom = (array) ->
 		index = Math.floor(Math.random() * array.length)
@@ -30,14 +30,35 @@ $ ->
 		if ready
 			$('.check').addClass('check--active')
 		else $('.check').removeClass('check--active')
+			
+	checkGuess = () ->
+		guess = []
+		guesses = $('.guess .number')
+		for number in guesses
+			guess.push(parseInt($(number).text()))
+			$(number).text('')
+		lastMove = $('.move').eq(-1)
+		for number, i in lastMove.find('.number')
+			$(number).text(guess[i])
+		exist = 0
+		match = 0
+		for i in [0,1,2,3]
+			exist++ if guess[i] in secret
+			match++ if guess[i] == secret[i]
+		lastMove.find('.exist').text(exist);
+		lastMove.find('.match').text(match);
+		selectActive(0)
+			
+			
 	
 	initGame = () ->
+		secret = []
 		numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-		secret = pickRandom(numbers)
+		secret.push(pickRandom(numbers))
 		numbers.push(0)
 		for i in [1, 2, 3]
-			secret = secret*10 + pickRandom(numbers)
-		#console.log(secret)
+			secret.push(pickRandom(numbers))
+		d(secret)
 		selectActive(0)
 	
 	$(document).on "keypress", (event) ->
@@ -47,5 +68,8 @@ $ ->
 	
 	$('.guess .number').on "click", ->
 		selectActive($(this))
+	
+	$('.check').on "click", ->
+		checkGuess()
 			
 	initGame()
